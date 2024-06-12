@@ -1,0 +1,73 @@
+<!-- breadcrumb -->
+<div class="container">
+  <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+    
+  </div>
+</div>
+
+<!-- Shoping Cart -->
+<!-- <form class="bg0 p-t-75 p-b-85"> -->
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+      <div class="m-l-25 m-r--38 m-lr-0-xl">
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="wrap-table-shopping-cart">
+          <% if (userwishlist.length === 0) { %>
+            <div class="text-center">
+              <h4 class="mtext-109 cl2 p-b-30">
+                Your wishlist is currently empty.
+              </h4>
+            </div>
+          <% } else { %>
+            <table class="table-shopping-cart">
+              <tr class="table_head">
+                <th class="column-1">Product</th>
+                <th class="column-2">Title</th>
+                <th class="column-3">Price</th>
+              </tr>
+              <% userwishlist.forEach((item) => { %>
+                <tr class="table_row">
+                  <td class="column-1">
+                    <div class="how-itemcart1">
+                      <img src="/admin/uploads/<%= item.productId.primaryImage[0].name %>" alt="IMG">
+                    </div>
+                  </td>
+                  <td class="column-2"><%= item.productId.title %></td>
+                  <td class="column-3"><%= item.productId.productPrice %></td>
+                  <td class="column-6">
+                    <div class="btnn">
+                      <form action="/removewishlist" method="POST">
+                        <input type="hidden" name="productId" value="<%= item.productId._id %>">
+                        <button type="submit" class="btn btn-danger">Remove</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </table>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+
+<style>
+.btnn {
+  padding-right: 20px;
+}
+
+.empty-wishlist-message {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 20px;
+}
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

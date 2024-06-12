@@ -1,0 +1,105 @@
+<!-- orders.ejs -->
+<h1>Order List</h1>
+
+<% if (orderdetails.length === 0) { %>
+  <div class = "no-orders">
+  <p>No orders available.</p>
+</div>
+<% } else { %>
+  <div class="card-container d-flex-row align-items-center">
+
+    <% 
+    // Sort orders by order date in descending order
+    orderdetails.sort((a, b) => b.orderDate - a.orderDate);
+%>
+    <% orderdetails.forEach((order) => { %>
+      <div class="card">
+        <div class="card-header">
+          <h4>Order Number: <%= order._id %></h4>
+        </div>
+        <div class="card-body">
+          
+        
+          <div class="order-details">
+            <p>Date: <%= order.orderDate.toLocaleDateString() %></p>
+            <p>Total: <%= order.grandTotal %></p>
+            <p>Status: <%= order.status %></p>
+            <a href="/orderDetailing?id=<%= order._id %>">View Order</a>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<style>
+body {
+  font-family: 'Arial', sans-serif;
+}
+
+h1 {
+  text-align: center;
+  margin: 50px;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column; 
+  gap: 20px;
+}
+
+.card {
+  width: 50%;
+  margin: 0 auto; 
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: black;
+  color: #fff;
+  padding: 10px;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 20px;
+}
+
+.product-image {
+  max-width: 25%; 
+  margin-right: 20px; 
+}
+
+.order-details {
+  padding-left: 83px;
+  flex: 1; 
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-4px);
+}
+
+
+.no-orders {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 200px;
+    }
+
+    .no-orders p {
+        font-size: 20px;
+        color: #666;
+        font-weight: bold;
+    }
+
+
+
+
+</style>

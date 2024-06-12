@@ -1,0 +1,88 @@
+<section class="content-main">
+  <div class="content-header">
+      <div>
+          <h2 class="content-title card-title">Order List </h2>
+      </div>
+  </div>
+  <div class="card mb-4">
+      <div class="card-body">
+          <div class="table-responsive">
+              <table style="width: 100%;" id="example" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+                  <thead>
+                      <tr>
+                          <th>#ID</th>
+                          <th>Name</th>
+                          <th>Phone</th>
+                          <th>Total</th>
+                          <th>Status</th>
+                          <th>Date</th>
+                          <th>Action</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <% if (order.length > 0) { %>
+                          <% order.forEach((items) => { %>
+                              <tr>
+                                  <td class="align-middle"><%= items._id %></td>
+                                  <td><b><%= items.address?.user_name %></b></td>
+                                  <td class="align-middle"><%= items.address?.phone %></td>
+                                  <td class="align-middle"><%= items.grandTotal %></td>
+                                  <td class="align-middle">
+                                      <span class="badge2 rounded-pill alert-warning"><%= items.status %></span>
+                                  </td>
+                                  <td class="align-middle"><%= items.orderDate.toLocaleString() %></td>
+                                  <td class="align-middle">
+                                      <a class="btn btn-sm btn-primary" href="/admin/orderdetails/<%= items._id %>">Details</a>
+                                  </td>
+                              </tr>
+                          <% }) %>
+                      <% } else { %>
+                          <tr>
+                              <td colspan="7">
+                                  <h2>No Orders yet</h2>
+                              </td>
+                          </tr>
+                      <% } %>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+</section>
+
+
+
+<script>
+  $(document).ready(function () {
+    new DataTable('#example',{
+      "processing": true,
+      "serverSide": true,
+      "ajax": {
+        "url": "/admin/orderpage",
+        "type": "POST",
+        "dataSrc": function (json) {
+          // Ensure the JSON response is correctly interpreted
+          return json.data;
+        }
+      },
+      "columns": [
+        { "data": "_id" },
+        { "data": "user_name" },
+        { "data": "phone" },
+        { "data": "grandTotal" },
+        { "data": "status" },
+        { "data": "orderDate" },
+        { "data": "action" }
+      ],
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true
+    });
+  });
+</script>
+
+

@@ -1,0 +1,196 @@
+<main class="main pt-150">
+    <section class="mt-50 mb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-25">
+                        <h4>Add Address</h4>
+                    </div>
+                    <div class="row pt-4">
+                        <form action="/addAddress" method="post" class="address-form" id="myForm">
+                            <div class="row">
+                                <!-- Name -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="name">Name</label>
+                                        <input type="text" class="form-control" id="name" name="user_name" required />
+                                        <span id="nameError" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="street">Address</label>
+                                        <input type="text" class="form-control" id="address" name="address" required />
+                                        <span id="addressError" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <!-- City and State -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="city">Town</label>
+                                        <input type="text" class="form-control" id="town" name="town" required />
+                                        <span id="townError" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="state">State</label>
+                                        <input type="text" class="form-control" id="state" name="state" required />
+                                        <span id="stateError" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Pin Code -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="pincode">Post code</label>
+                                        <input type="text" class="form-control" id="pincode" name="pincode" required />
+                                        <span id="pincodeError" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Contact Information -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="mobile">Mobile Number</label>
+                                        <input type="tel" class="form-control" id="mobile" name="phone" required />
+                                        <span id="mobileError" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Add Button -->
+                            <div class="button-box">
+                                <button type="submit" class="btn btn-primary my-3">Add Address</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.getElementById('myForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const name = document.getElementById('name').value.trim();
+        const address = document.getElementById('address').value.trim();
+        const town = document.getElementById('town').value.trim();
+        const state = document.getElementById('state').value.trim();
+        const pincode = document.getElementById('pincode').value.trim();
+        const mobile = document.getElementById('mobile').value.trim();
+
+        let isValid = true;
+
+        // Validation for each field
+        if (!name) {
+            document.getElementById('nameError').innerText = 'Name is required';
+            isValid = false;
+        } else {
+            document.getElementById('nameError').innerText = '';
+        }
+
+        if (!address) {
+            document.getElementById('addressError').innerText = 'Address is required';
+            isValid = false;
+        } else {
+            document.getElementById('addressError').innerText = '';
+        }
+
+        if (!town) {
+            document.getElementById('townError').innerText = 'Town is required';
+            isValid = false;
+        } else {
+            document.getElementById('townError').innerText = '';
+        }
+
+        if (!state) {
+            document.getElementById('stateError').innerText = 'State is required';
+            isValid = false;
+        } else {
+            document.getElementById('stateError').innerText = '';
+        }
+
+        if (!pincode) {
+            document.getElementById('pincodeError').innerText = 'Post code is required';
+            isValid = false;
+        } else {
+            document.getElementById('pincodeError').innerText = '';
+        }
+
+        const mobileRegex = /^[0-9]{10}$/;
+        if (!mobile) {
+            document.getElementById('mobileError').innerText = 'Mobile number is required';
+            isValid = false;
+        } else if (!mobileRegex.test(mobile)) {
+            document.getElementById('mobileError').innerText = 'Invalid mobile number';
+            isValid = false;
+        } else {
+            document.getElementById('mobileError').innerText = '';
+        }
+
+        if (isValid) {
+            const formData = {
+                user_name: name,
+                address,
+                town,
+                state,
+                pincode,
+                phone: mobile
+            };
+
+            Swal.fire({
+                title: "Add Address?",
+                text: "Are you sure you want to add this Address?",
+                icon: "warning",
+                showCancelButton: true,
+                cancelButtonText: "No, Cancel",
+                confirmButtonText: "Yes, Add Address",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/addAddress', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message === "Address added successfully") {
+                            Swal.fire({
+                                title: "Address Added",
+                                text: "Address Added Successfully",
+                                icon: "success",
+                            }).then(() => {
+                                window.location.href = '/address'; // Redirect to address page
+                            });
+                        } else {
+                            Swal.fire({
+                                title: "Error",
+                                text: data.error || "Failed to add address",
+                                icon: "error",
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                                title: "Address Added",
+                                text: "Address Added Successfully",
+                                icon: "success",
+                            }).then(() => {
+                                window.location.href = '/address'; // Redirect to address page
+                            });
+                    });
+                }
+            });
+        }
+    });
+</script>

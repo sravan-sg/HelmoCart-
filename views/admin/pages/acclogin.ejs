@@ -1,0 +1,73 @@
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <section class="content-main mt-80 mb-80">
+                    <div class="card mx-auto card-login">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4">Sign in</h4>
+                            <% if(typeof adminCheck !=='undefined' ) { %>
+                                <div class="alert alert-danger fade show mt-0" id="message" role="alert">
+                                    <%- adminCheck %>
+                                </div>
+                            <% } %>
+                            <form method="post" onsubmit="return validateForm()">
+                                <div class="mb-3">
+                                    <input class="form-control" placeholder="Email" type="email" id="form1Example13"
+                                        name="email" value="admin123@gmail.com">
+                                    <small id="emailError" class="text-danger"></small>
+                                </div>
+                                <!-- form-group// -->
+                                <div class="mb-3">
+                                    <input class="form-control" placeholder="Password" type="password"
+                                        id="form1Example23" name="password" value="admin123">
+                                    <small id="passwordError" class="text-danger"></small>
+                                </div>
+                                <!-- form-group// -->
+                                <div class="mb-4">
+                                    <button type="submit" class="btn btn-primary w-100"> Login </button>
+                                </div>
+                                <!-- form-group// -->
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function validateForm() {
+            var email = document.getElementById('form1Example13').value;
+            var password = document.getElementById('form1Example23').value;
+
+            // Reset previous error messages
+            document.getElementById('emailError').textContent = '';
+            document.getElementById('passwordError').textContent = '';
+
+            // Validate Email
+            if (email.trim() === "") {
+                document.getElementById('emailError').textContent = 'Please enter your email';
+                return false;
+            }
+
+            // Validate Password
+            if (password.trim() === "") {
+                document.getElementById('passwordError').textContent = 'Please enter your password';
+                return false;
+            }
+
+            // You can add more complex validation if needed
+
+            return true;
+        }
+
+        const message = document.getElementById('message');
+
+        const hide = () => {
+            message.style.display = 'none';
+        }
+
+        setTimeout(hide, 3000);
+    </script>
+</body>

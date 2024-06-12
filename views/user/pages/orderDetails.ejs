@@ -1,0 +1,230 @@
+<section class="h-130 gradient-custom">
+  <br>
+<br>
+  <div  class="container py-5 h-120">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-lg-10 col-xl-8">
+        <div class="card" style="border-radius: 10px;">
+          
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <p class="lead fw-normal mb-0" style="color: #a8729a;">Receipt</p>
+          
+            </div>
+            <% for (const orderDetail of orderDetails) { %>
+            <div class="card shadow-0 border mb-4">
+              <div class="card-body">
+                <% for (const product of orderDetail.products) { %>
+                <div class="row">
+                  <div class="col-md-2">
+                    <img src="/admin/uploads/<%= product.product.primaryImage[0].name %>"
+                      class="img-fluid" alt="<%= product.product.title %>">
+                  </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0"> <%= product.product.title %></p>
+                  </div>
+                  
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">quantity: <%= product.quantity %></p>
+                  </div> 
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">productPrice: <%= product.price %></p>
+                  </div>
+                </div>
+                <% } %>
+                <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
+                <div class="row d-flex align-items-center">
+                  <div class="col-md-2">
+                    <% if (orderDetail.status !== 'Cancelled' && orderDetail.status !== 'Delivered' && orderDetail.status !== 'Return Requested' && orderDetail.status !== 'Return Accepted' && orderDetail.status !== 'Return Rejected') { %>
+                      <button type="button" class="btn btn-primary btn-block cancel-btn" data-order-id="<%= orderDetail._id %>">Cancel</button>
+                    <% } %>
+                    <% if (orderDetail.status !== 'Cancelled' && orderDetail.status === 'Delivered') { %>
+                      <button type="button" class="btn btn-primary btn-block return-btn" data-order-id="<%= orderDetail._id %>">Return</button>
+                      <br>
+                    <% } %>
+                    <% if (orderDetail.status === 'Delivered') { %>
+                      <button
+                      type="button"
+                      class="btn btn-info h-auto"
+                      id="invoiceBtn"
+                      data-invoice-id="<%= orderDetail._id %>"
+                  >
+                      Download Invoice
+                  </button>
+                    <% } %>
+
+
+                  </div>
+                  
+                
+                </div>
+              </div>
+            </div>
+            <% } %>
+            <div class="d-flex justify-content-between pt-2">
+              <h4 class="fw-bold mb-0">Order Details</h4>
+              <p class="text-muted mb-0"><span class="fw-bold me-4">Total :</span><%= orderDetails[0].grandTotal %></p>
+            </div>
+
+            <div class="d-flex justify-content-between pt-2">
+              <p class="text-muted mb-0">orderId : <%= orderDetails[0]._id %></p  >
+             
+            </div>
+        
+            <div class="d-flex justify-content-between">
+              <p class="text-muted mb-0"> orderDate : <%= orderDetails[0].formattedOrderDate %></p>
+            </div>
+            
+            
+            <div class="d-flex justify-content-between">
+              <p class="text-muted mb-0">paymentMethod : <%= orderDetails[0].paymentMethod %></p>
+           
+            </div>
+
+            <div class="d-flex justify-content-between mb-5">
+              <p class="text-muted mb-0">Order Status: <%= orderDetails[0].status %></p>
+            </div>
+            <div class="justify-content-between mb-5">
+            <% if (orderDetails[0].address) { %>
+              <h4>Delivery Address</h4><br>
+              <p>Name: <%= orderDetails[0].address.user_name %>
+              </p> 
+              <p>address: <%= orderDetails[0].address.address %>
+              </p>
+              <p>town: <%= orderDetails[0].address.town %>
+              </p>
+              <p>State: <%= orderDetails[0].address.state %>
+              </p>
+              <p>Pincode: <%= orderDetails[0].address.pincode %>
+              </p>
+              <p>Phone: <%= orderDetails[0].address.phone %>
+              </p>
+              <% } else { %>
+                <p>Address not available.</p>
+                <% } %>
+                </div>
+          </div>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- SweetAlert CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const cancelButtons = document.querySelectorAll(".cancel-btn");
+
+    cancelButtons.forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        const orderId = event.target.dataset.orderId;
+
+        const confirmed = await Swal.fire({
+          title: "Are you sure?",
+          text: "You are about to cancel this order.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, cancel it!",
+        });
+
+        if (confirmed.isConfirmed) {
+          const response = await fetch(`/cancelSingleOrder`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ orderId: orderId }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            Swal.fire("Cancelled!", "Your order has been cancelled.", "success");
+            // You may want to reload the page or update the order status in the UI
+          } else {
+            Swal.fire("Error", data.error || "Failed to cancel order.", "error");
+          }
+        }
+      });
+    });
+  });
+
+
+//
+  document.addEventListener("DOMContentLoaded", () => {
+    const cancelButtons = document.querySelectorAll(".return-btn");
+
+    cancelButtons.forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        const orderId = event.target.dataset.orderId;
+
+        const confirmed = await Swal.fire({
+          title: "Are you sure?",
+          text: "You are about to return this order.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, return it!",
+        });
+
+        if (confirmed.isConfirmed) {
+          const response = await fetch(`/returnSingleOrder`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ orderId: orderId }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            Swal.fire("Return Accepted", "Your return request is accepted", "success");
+            // You may want to reload the page or update the order status in the UI
+          } else {
+            Swal.fire("Error", data.error || "Failed to return order.", "error");
+          }
+        }
+      });
+    });
+  });
+</script>
+<script>
+  document.getElementById("invoiceBtn").addEventListener("click", function (orderId) {
+      var invoiceButton = this;
+      var invoiceId = this.getAttribute("data-invoice-id");
+      // Disable the button and change its text
+      invoiceButton.disabled = true;
+      invoiceButton.textContent = "Downloading...";
+      fetch(`/orders/download/${invoiceId}`)
+          .then((response) => {
+              if (response.ok) {
+                  return response.blob();
+              } else {
+                  console.error("Failed to download the invoice");
+              }
+          })
+          .then((blob) => {
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = "invoice.pdf";
+              a.click();
+              window.URL.revokeObjectURL(url);
+              // Re-enable the button and restore its original text
+              invoiceButton.disabled = false;
+              invoiceButton.textContent = "Download Invoice";
+          })
+          .catch((error) => {
+              // Handle errors here
+              // Re-enable the button and restore its original text
+              invoiceButton.disabled = false;
+              invoiceButton.textContent = "Download Invoice";
+              console.error("An error occurred:", error);
+          });
+  });
+</script>

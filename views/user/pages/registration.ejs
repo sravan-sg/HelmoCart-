@@ -1,0 +1,163 @@
+<!--Main Navigation-->
+<header>
+  <style>
+    #intro {
+      background-image: url(https://mdbootstrap.com/img/new/fluid/city/008.jpg);
+      height: 130vh;
+    }
+
+    /* Height for devices larger than 576px */
+    @media (min-width: 992px) {
+      #intro {
+        margin-top: -58.59px;
+      }
+    }
+
+    .navbar .nav-link {
+      color: #fff !important;
+    }
+  </style>
+ <div id="intro" class="bg-image shadow-2-strong">
+  <div class="mask d-flex align-items-center h-100" style="background-color: rgba(0, 0, 0, 0.8);">
+    <br>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+    <br>
+    <br>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Register</h3>
+                </div>
+                <div class="card-body">
+                    <form class="bg-white rounded-5 shadow-5-strong p-5" action="/registration" method="post" onsubmit="return validateForm()">
+
+                        <!-- Name input -->
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="username">Name</label>
+                            <input type="text" id="username" class="form-control" name="username" />
+                        </div>
+
+                        <!-- Email input -->
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="email">Email</label>
+                            <input type="email" id="email" class="form-control" name="email" />
+                        </div>
+
+                        <!-- Mobile input -->
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="mobile">Mobile</label>
+                            <input type="number" id="mobile" class="form-control" name="mobile" />
+                        </div>
+
+                        <!-- Password input -->
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="form1Example3">Password</label>
+                            <input type="password" id="form1Example3" class="form-control" name="password" />
+                        </div>
+
+                        <!-- Repeat Password input -->
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="form1Example4">Repeat Password</label>
+                            <input type="password" id="form1Example4" class="form-control" name="repeatPassword" />
+                        </div>
+
+                        <!-- Referral Code input -->
+                        <div class="col-md-12">
+                            <div class="mb-3 p-3">
+                                <label for="referralCode" class="form-label">Referral Code</label>
+                                <input type="text" class="form-control" name="referralCode" id="referralCode" placeholder="Enter Referral Code" /> 
+                            </div>
+                        </div>
+
+                        <!-- Error Messages -->
+                        <% if (typeof message !== 'undefined' && message) { %>
+                            <div class="alert alert-danger">
+                                <%= message %>
+                            </div>
+                        <% } %>
+                        <% if (typeof userCheck !== 'undefined' && userCheck) { %>
+                            <div class="alert alert-danger">
+                                <%= userCheck %>
+                            </div>
+                        <% } %>
+                        <% if (typeof mobileCheck !== 'undefined' && mobileCheck) { %>
+                            <div class="alert alert-danger">
+                                <%= mobileCheck %>
+                            </div>
+                        <% } %>
+
+                        <!-- Submit button -->
+                        <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+                        <br>
+                        <div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+<script>
+  function validateForm() {
+    var username = document.getElementById('username').value;
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('form1Example3').value;
+    var repeatPassword = document.getElementById('form1Example4').value;
+    var mobile = document.getElementById('mobile').value;
+    var errorMessageElement = document.getElementById('errorMessage');
+
+    // Validate all form elements
+    if (username.trim() === "" || email.trim() === "" || password.trim() === "" || repeatPassword.trim() === "" || mobile.trim() === "") {
+      errorMessageElement.innerHTML = "Please fill in all the fields.";
+      errorMessageElement.style.display = 'block';
+      return false;
+    }
+
+    // Validate Username
+    if (username.trim() === "") {
+      errorMessageElement.innerHTML = "Please enter your username.";
+      errorMessageElement.style.display = 'block';
+      return false;
+    }
+
+    // Validate Email
+    if (email.trim() === "") {
+      errorMessageElement.innerHTML = "Please enter your email.";
+      errorMessageElement.style.display = 'block';
+      return false;
+    }
+
+    // Validate Mobile
+    if (mobile.trim() === "") {
+      errorMessageElement.innerHTML = "Please enter your mobile number.";
+      errorMessageElement.style.display = 'block';
+      return false;
+    }
+
+    // Validate Password and Repeat Password
+    if (password.trim() === "") {
+      errorMessageElement.innerHTML = "Please enter your password.";
+      errorMessageElement.style.display = 'block';
+      return false;
+    }
+
+    if (repeatPassword.trim() === "") {
+      errorMessageElement.innerHTML = "Please repeat your password.";
+      errorMessageElement.style.display = 'block';
+      return false;
+    }
+
+    if (password !== repeatPassword) {
+      errorMessageElement.innerHTML = "Passwords do not match.";
+      errorMessageElement.style.display = 'block';
+      return false;
+    }
+
+    return true;
+  }
+</script>
+

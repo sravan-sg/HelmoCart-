@@ -1,0 +1,112 @@
+<main class="main pt-150">
+    <section class="mt-50 mb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-25">
+                        <h4>Edit Address</h4>
+                    </div>
+                    <div class="row pt-4">
+                        <form action="/editAddress?id=<%= newAddress._id %>" method="post" class="address-form" id="addressForm">
+                            <div class="row">
+                                <!-- Name -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="name">Name</label>
+                                        <input type="text" class="form-control" id="name" name="user_name" value="<%= newAddress.user_name %>"  />
+                                        <div class="invalid-feedback">Please enter your name.</div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="street">Address</label>
+                                        <input type="text" class="form-control" id="address" name="address" value="<%= newAddress.address %>"  />
+                                        <div class="invalid-feedback">Please enter your address.</div>
+                                    </div>
+                                </div>
+
+                                <!-- City and State -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="city">Town</label>
+                                        <input type="text" class="form-control" id="city" name="town" value="<%= newAddress.town %>"  />
+                                        <div class="invalid-feedback">Please enter your town.</div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="state">State</label>
+                                        <input type="text" class="form-control" id="state" name="state" value="<%= newAddress.state %>"  />
+                                        <div class="invalid-feedback">Please enter your state.</div>
+                                    </div>
+                                </div>
+
+                                <!-- Pin Code -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="pincode">Post code</label>
+                                        <input type="text" class="form-control" id="pincode" name="pincode" value="<%= newAddress.pincode %>"  />
+                                        <div class="invalid-feedback">Please enter your post code.</div>
+                                    </div>
+                                </div>
+
+                                <!-- Contact Information -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="mobile">Mobile Number</label>
+                                        <input type="tel" class="form-control" id="mobile" name="phone" value="<%= newAddress.phone %>"  />
+                                        <div class="invalid-feedback">Please enter your mobile number.</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Add Button -->
+                            <div class="button-box">
+                                <button type="submit" class="btn btn-primary my-3">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    document.getElementById('addressForm').addEventListener('submit', function(event) {
+        let isValid = true;
+        const formFields = ['name', 'address', 'city', 'state', 'pincode', 'mobile'];
+
+        formFields.forEach(function(field) {
+            const input = document.getElementById(field);
+            const feedback = input.nextElementSibling;
+            input.value = input.value.trim();
+
+            if (input.value === '') {
+                isValid = false;
+                input.classList.add('is-invalid');
+                feedback.style.display = 'block';
+            } else {
+                input.classList.remove('is-invalid');
+                feedback.style.display = 'none';
+            }
+        });
+
+        if (!isValid) {
+            event.preventDefault();
+        }
+    });
+</script>
+
+<style>
+    .is-invalid {
+        border-color: #dc3545;
+    }
+    .invalid-feedback {
+        display: none;
+        color: #dc3545;
+        margin-top: 0.25rem;
+    }
+</style>

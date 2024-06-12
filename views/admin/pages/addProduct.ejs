@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Product</title>
+  <style>
+    .error-box {
+      display: none;
+      color: #fff;
+      background-color: #dc3545;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2 mt-2>Add Product</h2>
+
+    
+
+    <form action="/admin/product/addProduct" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+      <div class="card">
+        <div class="card-body">
+          <hr class="mb-4 mt-0">
+          <div class="row">
+            <div class="col-md-3">
+              <h6>1. General info</h6>
+            </div>
+            <div class="col-md-9">
+              <div class="mb-4">
+                <label class="form-label">Product title</label>
+                <input type="text" placeholder="Type here" name="title" id="title" class="form-control">
+              </div>
+              <div class="mb-4">
+                <label class="form-label">Description</label>
+                <textarea placeholder="Type here" class="form-control" name="description" type="text" id="description"
+                  rows="4"></textarea>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label">Brand name</label>
+                <input placeholder="Type here" class="form-control" name="brand" type="text" id="brand">
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label">Size</label>
+                <input placeholder="Type here" class="form-control" name="size" id="size">
+              </div>
+
+            </div>
+          </div>
+          <hr class="mb-4 mt-0">
+          <div class="row">
+            <div class="col-md-3">
+              <h6>2. Category</h6>
+            </div>
+            <div class="col-md-9">
+              <div class="mb-4">
+                <select class="form-select" name="categoryName" id="category" required>
+                  <option value="">Select category</option>
+                  <% catList.forEach(category=> { %>
+                  <option value="<%= category?._id %>">
+                    <%= category.categoryName %>
+                  </option>
+                  <% }) %>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3">
+              <h6>3. Pricing</h6>
+            </div>
+            <div class="col-md-9">
+              <div class="mb-4">
+                <label for="Productprice">Product Price</label>
+                <input type="text" placeholder="₹" name="productPrice" id="productPrice" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3">
+              <h6>4. Units</h6>
+            </div>
+            <div class="col-md-9">
+              <div class="mb-4">
+                <label for="Quantity">Quantity</label>
+                <input type="text" placeholder="No's" name="quantity" id="quantity" class="form-control">
+              </div>
+            </div>
+          </div>
+          <hr class="mb-4 mt-0">
+
+          <div class="row">
+            <div class="col-md-3">
+              <h6>5. Media</h6>
+            </div>
+            <div class="col-md-9">
+              <div class="card p-md-5 p-2 me-md-5">
+                <h5>Choose product images </h5>
+                <span class="fw-normal mb-4 text-success">file supports only: jpeg,jpg,png,webp</span>
+                <span class="fw-bold">Select the Primary Image</span>
+                <input type="file" accept=".jpg,.jpeg,.png,.webp,.svg" class="form-control FilUploader"
+                  name="primaryImage" id="primaryImage" class="mb-3" multiple required />
+                <span class="fw-bold">Select secondary images <br> <br>
+                  <input type="file" accept=".jpg,.jpeg,.png,.webp,.svg" class="form-control FilUploader"
+                    id="secondaryImages" name="secondaryImage" class="mb-3" accept=".jpg,.jpeg,.png,.webp,.svg"
+                    multiple required /><br>
+                    <!-- Error message box -->
+    <div id="errorMessages" class="error-box"></div>
+                <button type="submit" class="btn btn-primary mb-4 mt-2 ">Add Product</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function validateForm() {
+      var title = document.getElementById('title').value.trim();
+      var description = document.getElementById('description').value.trim();
+      var brand = document.getElementById('brand').value.trim();
+      var size = document.getElementById('size').value.trim();
+      var category = document.getElementById('category').value.trim();
+      var productPrice = document.getElementById('productPrice').value.trim();
+      var quantity = document.getElementById('quantity').value.trim();
+      var primaryImage = document.getElementById('primaryImage').value.trim();
+      var secondaryImages = document.getElementById('secondaryImages').value.trim();
+
+      var errorMessages = '';
+
+      // Validate Title
+      if (title === "") {
+        errorMessages += "<p>Please enter a product title.</p>";
+      }
+      // Validate Description
+      if (description === "") {
+        errorMessages += "<p>Please enter a description.</p>";
+      }
+      // Validate Brand
+      if (brand === "") {
+        errorMessages += "<p>Please enter a brand name.</p>";
+      }
+      // Validate Size
+      if (size === "") {
+        errorMessages += "<p>Please enter a size.</p>";
+      }
+      // Validate Category
+      if (category === "") {
+        errorMessages += "<p>Please select a category.</p>";
+      }
+      // Validate Product Price
+      if (productPrice === "" || isNaN(productPrice) || parseFloat(productPrice) <= 0) {
+        errorMessages += "<p>Please enter a valid product price.</p>";
+      }
+      // Validate Quantity
+      if (quantity === "" || isNaN(quantity) || parseInt(quantity) <= 0) {
+        errorMessages += "<p>Please enter a valid quantity.</p>";
+      }
+      // Validate Primary Image
+      if (primaryImage === "") {
+        errorMessages += "<p>Please select a primary image.</p>";
+      }
+      // Validate Secondary Images
+      if (secondaryImages === "") {
+        errorMessages += "<p>Please select at least one secondary image.</p>";
+      }
+
+      if (errorMessages) {
+        var errorBox = document.getElementById('errorMessages');
+        errorBox.innerHTML = errorMessages;
+        errorBox.style.display = 'block';
+        return false;
+      }
+
+      return true;
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Category</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Edit Category</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="editCategoryForm">
+                        <div class="form-group">
+                            <label for="categoryName">Category Name</label>
+                            <input type="text" class="form-control" name="updatedName" id="categoryName"
+                                   value="<%= catCheck ? catCheck.updatedName : catCheck.categoryName %>" 
+                                   placeholder="Enter category name" required>
+                            <div class="invalid-feedback" id="nameError">Category name is required.</div>
+                        </div>
+
+                        <% if (catCheck && catCheck.message) { %>
+                            <div class="alert alert-danger" role="alert">
+                                <%= catCheck.message %>
+                            </div>
+                        <% } %>
+
+                        <button type="submit" class="btn btn-primary">Update Category</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#editCategoryForm').submit(function(event) {
+            const categoryName = $('#categoryName').val().trim();
+
+            if (!categoryName) {
+                event.preventDefault(); // Prevent form submission
+                $('#nameError').show();
+            } else {
+                $('#nameError').hide();
+            }
+        });
+    });
+</script>
+</body>
+</html>
