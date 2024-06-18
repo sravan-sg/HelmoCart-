@@ -1,14 +1,16 @@
 const express=require('express');
 const userRoute=express.Router();
+
 const userController=require('../controllers/usercontroller');
 const userAuth=require('../middleware/userAuth')
+
 const setErrorMessage = require('../middleware/errormsg');
-const addressControl=require('../controllers/addressControl')
+const addressControl=require('../controllers/addressControl');
 const cartController=require('../controllers/cartControler');
 
 const wishlistController = require('../controllers/wishlistControl');
 const path = require('path');
-const orderController = require('../controllers/orderController');
+const orderController = require(path.resolve(__dirname, '../controllers/orderController'));
 
 
 
@@ -19,20 +21,19 @@ userRoute.use((req, res, next) => {
   req.app.set('layout', 'user/layout/user');
   
   next();
-})
+});
+console.log(userController,'userCotrollerrrrrrrrrrrs');
 
-
-userRoute.get('/',userController.loadlandingpage)
-userRoute.get('/login',userController.loadloginpage);
+userRoute.get('/',userAuth.isLogin,userController.loadlandingpage);
+userRoute.get('/login',userAuth.isLogout,userController.loadloginpage);
 userRoute.get('/userprofile',userController.loaduserprofile);
 userRoute.post('/userprofile',userController.editProfilePost);
-
 
 userRoute.get('/registration',userController.loadregistration);
 userRoute.get('/logout',userController.logout);
 
 userRoute.post('/registration',userController.register);
-userRoute.post('/login',userController.login);
+userRoute.post('/login',userAuth.isLogout,userController.login);
 userRoute.get('/about',userController.loadaboutpage);
 userRoute.get('/shop',userController.loadshoppage);
 
@@ -40,6 +41,7 @@ userRoute.get('/contact',userController.loadcontactpage);
 userRoute.get('/product',userController.loadproductdetailspage);
 userRoute.get('/login',userAuth.isLogout,userController.loadloginpage);
 userRoute.get('/',userAuth.isLogin,userController.loadlandingpage)
+
 
 userRoute.get('/otp',userController.sendOTPpage);
 userRoute.post('/otp',userController.verifyOTP);
@@ -77,17 +79,20 @@ userRoute.post('/forget', userAuth.isLogout,userController.forgetpswd)
 userRoute.get('/forget-password',userAuth.isLogout,userController.forgetPswdload);
 userRoute.post('/forget-password',userAuth.isLogout, userController.resetPswd)
 
-//ADDRESS
-userRoute.get('/address', userAuth.isLogin,addressControl.getAllAddress )
-userRoute.get('/addAddress', userAuth.isLogin, addressControl.addAddressPage)
-userRoute.post('/addAddress', userAuth.isLogin, addressControl.newAddress)
+
+//ADD ADDRESS
+userRoute.get('/address', userAuth.isLogin,addressControl.getAllAddress );
+userRoute.get('/addAddress', userAuth.isLogin, addressControl.addAddressPage);
+userRoute.post('/addAddress', userAuth.isLogin, addressControl.newAddress);
 userRoute.get('/editAddress', userAuth.isLogin,addressControl.editAddressPage);
 userRoute.post('/editAddress', userAuth.isLogin,addressControl.editAddress);
 userRoute.get('/deltAddress/:id', userAuth.isLogin,addressControl.deleteAddress);
 
 //reset password
+
 userRoute.get('/reset', userAuth.isLogin,userController.loadResetpage )
 userRoute.post('/reset', userAuth.isLogin,userController.UpdatePassword )
+
 
 
 //checkOut
@@ -96,7 +101,12 @@ userRoute.get('/checkOut',userAuth.isLogin,cartController.loadcheckoutpage);
 
 //orders
 
+console.log(orderController.confirmOrder);
+console.log(orderController);
+
+
 console.log(orderController,"ordercontroller is");
+
 userRoute.post("/confirm-order",orderController.confirmOrder);
 
 userRoute.get("/orderList", userAuth.isLogin, orderController.loadorderspage);
@@ -128,4 +138,4 @@ userRoute.get("/coupon/remove", userAuth.isLogin, orderController.removeAppliedC
 
 
 
-module.exports=userRoute;        
+module.exports=userRoute;
