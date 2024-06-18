@@ -8,7 +8,7 @@ const cartController=require('../controllers/cartControler');
 
 const wishlistController = require('../controllers/wishlistControl');
 const path = require('path');
-const orderController = require(path.resolve(__dirname, '../controllers/orderController'));
+const orderController = require('../controllers/orderController');
 
 
 
