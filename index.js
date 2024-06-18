@@ -11,6 +11,7 @@ const database = require("./config/database");
 const bodyParser = require("body-parser");
 require("dotenv").config();
 const session = require("express-session");
+const {isAuthenticated} = require("./middleware/userAuth")
 const nocache = require("nocache");
 const connectFlash = require('connect-flash')
 app.use(express.json());
@@ -30,6 +31,9 @@ app.use(session({
       maxAge: 24 * 60 * 60 * 1000  
   },
 }))
+
+app.use(isAuthenticated);
+
 // using for sending message to ejs
 app.use(connectFlash());
 app.use((req, res, next) => {

@@ -28,7 +28,20 @@ const isLogout = async (req, res, next) => {
   }
 };
 
+const isAuthenticated = (req, res, next) => {
+  if (req.session.user_id) {
+    res.locals.isAuthenticated = true;
+    res.locals.user = req.session.user_id;
+  } else {
+    res.locals.isAuthenticated = false;
+    res.locals.user = null;
+  }
+  next();
+};
+
+
 module.exports = {
   isLogin,
-  isLogout
+  isLogout,
+  isAuthenticated
 };

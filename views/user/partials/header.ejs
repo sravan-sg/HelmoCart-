@@ -8,14 +8,14 @@
           Free shipping for standard order over $100
         </div>
         <div class="right-top-bar flex-w h-full">
-          <% if(!user){ %>
+          <% if(!isAuthenticated){ %>
           <a href="/login" class="flex-c-m trans-04 p-lr-25">
            login
           </a>
           <a href="/registration" class="flex-c-m trans-04 p-lr-25">
           register
           </a>
-          <% } else{ %>
+          <% } else if(user ){ %>
          
           <a href="/userprofile" class="flex-c-m trans-04 p-lr-25">
           <%= user.username %>
