@@ -113,7 +113,7 @@ userRoute.post("/cancelSingleOrder", orderController.cancelOrderById);
 userRoute.post("/returnSingleOrder", orderController.returnOrderById);
 userRoute.get("/orders/download/:id", orderController.donwloadInvoice);
 
-
+userRoute.get('/ordersuccess',orderController.ordersuccess)
 userRoute.post('/verify-payment',userAuth.isLogin,orderController.verifyPayment);
 
 

@@ -264,6 +264,17 @@ const confirmOrder = async (req, res) => {
 };
 
 
+const ordersuccess=asyncHandler(async (req, res) => {
+  const userId = req.session.user_id;
+  const user_id=await User.findById(userId);  
+  try {
+    res.render("user/pages/ordersuccess", { user_id});
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+
 const verifyPayment = async (req, res) => {
   try {
     verifyOrderPayment(req.body)
@@ -553,6 +564,7 @@ module.exports = {
   loadorderspage,
   confirmOrder,
   verifyPayment,
+  ordersuccess,
   cancelOrder,
   cancelOrderById,
   returnOrderById,
