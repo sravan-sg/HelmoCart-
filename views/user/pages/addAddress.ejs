@@ -76,8 +76,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    document.getElementById('myForm').addEventListener('submit', function (event) {
-        event.preventDefault();
+  document.getElementById('myForm').addEventListener('submit', function (event) {
+    event.preventDefault();
 
         const name = document.getElementById('name').value.trim();
         const address = document.getElementById('address').value.trim();
@@ -135,62 +135,75 @@
             document.getElementById('mobileError').innerText = '';
         }
 
-        if (isValid) {
-            const formData = {
-                user_name: name,
-                address,
-                town,
-                state,
-                pincode,
-                phone: mobile
-            };
+       
+    if (isValid) {
+      const formData = {
+        user_name: name,
+        address,
+        town,
+        state,
+        pincode,
+        phone: mobile
+      };
 
-            Swal.fire({
-                title: "Add Address?",
-                text: "Are you sure you want to add this Address?",
-                icon: "warning",
-                showCancelButton: true,
-                cancelButtonText: "No, Cancel",
-                confirmButtonText: "Yes, Add Address",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch('/addAddress', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(formData)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.message === "Address added successfully") {
-                            Swal.fire({
-                                title: "Address Added",
-                                text: "Address Added Successfully",
-                                icon: "success",
-                            }).then(() => {
-                                window.location.href = '/address'; // Redirect to address page
-                            });
-                        } else {
-                            Swal.fire({
-                                title: "Error",
-                                text: data.error || "Failed to add address",
-                                icon: "error",
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        Swal.fire({
-                                title: "Address Added",
-                                text: "Address Added Successfully",
-                                icon: "success",
-                            }).then(() => {
-                                window.location.href = '/address'; // Redirect to address page
-                            });
-                    });
+      Swal.fire({
+        title: "Add Address?",
+        text: "Are you sure you want to add this Address?",
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonText: "No, Cancel",
+        confirmButtonText: "Yes, Add Address",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch('/addAddress', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.message === "Address added successfully") {
+              Swal.fire({
+                title: "Address Added",
+                text: "Address Added Successfully",
+                icon: "success",
+              }).then(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirect = urlParams.get('redirect');
+                if (redirect === 'checkout') {
+                  window.location.href = '/checkout'; // Redirect to checkout page
+                } else {
+                  window.location.href = '/address'; // Redirect to address page
                 }
-            });
+              });
+            } else {
+              Swal.fire({
+                title: "Error",
+                text: data.error || "Failed to add address",
+                icon: "error",
+              });
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                title: "Address Added",
+                text: "Address Added Successfully",
+                icon: "success",
+              }).then(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirect = urlParams.get('redirect');
+                if (redirect === 'checkout') {
+                  window.location.href = '/checkout'; // Redirect to checkout page
+                } else {
+                  window.location.href = '/address'; // Redirect to address page
+                }
+              });
+          });
         }
-    });
+      });
+    }
+  });
 </script>

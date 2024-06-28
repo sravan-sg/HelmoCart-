@@ -29,10 +29,15 @@ const newAddress = asyncHandler(async (req, res) => {
   const newAddress = await Address.create(req.body);
   if (newAddress) {
     console.log(newAddress);
-    res.redirect("/address");
+    const redirect = req.query.redirect;
+    if (redirect === 'checkout') {
+      res.redirect("/checkout"); // Redirect to checkout page
+    } else {
+      res.redirect("/address"); // Redirect to address page
+    }
   } else {
     throw new Error();
-  }
+  }
 });
 
 
