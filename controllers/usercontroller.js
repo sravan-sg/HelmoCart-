@@ -21,13 +21,14 @@ const WalletTransaction=require('../models/walletTransactionModel')
 const loadlandingpage = async (req, res) => {
   try {
     const user = req.session.user_id;
+    const user_id=await User.findById(user);
 
     const getalldata = await Product.find().populate({
       path: 'categoryName',
       match: { isListed: true }
     });
     
-    res.render("./user/pages/index", { getalldata,user});
+    res.render("./user/pages/index", { getalldata,user,user_id});
   } catch (error) {
     throw new Error(error);
   }
@@ -40,8 +41,9 @@ const loadlandingpage = async (req, res) => {
 const loadloginpage = async (req, res) => {
   try {
     const user=req.session.user_id;
+    const user_id=await User.findById(user);
     console.log(user)
-    res.render("./user/pages/login", {user} );
+    res.render("./user/pages/login", {user,user_id} );
   } catch (error) {
     throw new Error(error);
   }
@@ -50,15 +52,16 @@ const loadloginpage = async (req, res) => {
 const loadregistration=async(req,res)=>{
   try {
     const user=req.session.user_id;
-    res.render('./user/pages/registration',{user})
+    const user_id=await User.findById(user);
+    res.render('./user/pages/registration',{user,user_id})
   } catch (error) {
     throw new Error(error);
   }
 }
 const loaduserprofile=async(req,res)=>{
   try {
-    const user_id=req.session.user_id;
-    const user=await User.findById(user_id);
+    const user=req.session.user_id;
+    const user_id=await User.findById(user);
     res.render('./user/pages/userprofile',{user_id,user})
   } catch (error) {
     throw new Error(error);
@@ -90,7 +93,8 @@ async function editProfilePost(req, res) {
 const loadaboutpage=async(req,res)=>{
   try {
     const user=req.session.user_id;
-    res.render('./user/pages/about',{user})
+    const user_id=await User.findById(user);
+    res.render('./user/pages/about',{user,user_id})
   } catch (error) {
     throw new Error(error);
   }
@@ -100,7 +104,8 @@ const loadaboutpage=async(req,res)=>{
 const loadcontactpage=async(req,res)=>{
   try {
     const user=req.session.user_id;
-    res.render('./user/pages/contact',{user})
+    const user_id=await User.findById(user);
+    res.render('./user/pages/contact',{user,user_id})
   } catch (error) {
     throw new Error(error);
   }
@@ -109,6 +114,7 @@ const loadcontactpage=async(req,res)=>{
 const loadshoppage = async (req, res) => {
   try {
     const user = req.session.user_id;
+    const user_id=await User.findById(user);
     const sortBy = req.query.sortBy || 'priceLowToHigh';
     const priceRange = req.query.priceRange || 'all';
     const searchQuery = req.query.search || '';
@@ -116,7 +122,7 @@ const loadshoppage = async (req, res) => {
     const limit = 4;
 
     // Build search filter
-    const searchFilter = searchQuery ? { title: { $regex: '.*' + searchQuery + '.*', $options: 'i' } } : {};
+    const searchFilter = searchQuery ? { title: { $regex: '.' + searchQuery + '.', $options: 'i' } } : {};
 
     // Fetch products with search filter
     let query = Product.find(searchFilter);
@@ -165,7 +171,7 @@ const loadshoppage = async (req, res) => {
       totalPages: Math.ceil(totalProducts / limit),
       currentPage: page,
       sortBy,
-      priceRange
+      priceRange,user_id,
     });
   } catch (error) {
     throw new Error(error);
@@ -184,7 +190,7 @@ const loadshoppage = async (req, res) => {
 //     const limit = 6;
 
 //     // Build search filter
-//     const searchFilter = searchQuery ? { title: { $regex: '.*' + searchQuery + '.*', $options: 'i' } } : {};
+//     const searchFilter = searchQuery ? { title: { $regex: '.' + searchQuery + '.', $options: 'i' } } : {};
 
 //     // Fetch products with search filter
 //     let getalldata = await Product.find(searchFilter);
@@ -243,8 +249,9 @@ const loadshoppage = async (req, res) => {
 const loadcartpage = async (req, res) => {
   try {
     const user=req.session.user_id;
+    const user_id=await User.findById(user);
     console.log(user)
-    res.render("./user/pages/cart", {user} );
+    res.render("./user/pages/cart", {user,user_id} );
   } catch (error) {
     throw new Error(error);
   }
@@ -433,8 +440,9 @@ const securePassword=async(password)=>{
 const sendOTPpage = async (req, res) => {
   try {
     const user=req.session.user_id;
+    const user_id=await User.findById(user);
       const email = req.session.otpUser
-      res.render('./user/pages/verifyOTP',{user})
+      res.render('./user/pages/verifyOTP',{user,user_id})
   } catch (error) {
       throw new Error(error)
   }
@@ -450,6 +458,8 @@ const verifyOTP = asyncHandler(async (req, res) => {
     const email = req.session.otpUser.email;
     const storedOTP = req.session.otpUser.otp; // Getting the stored OTP from the session
     const user = req.session.otpUser;
+    const user1=req.session.user_id;
+    const user_id=await User.findById(user1);
     let messages = "";
 
     if (enteredOTP == storedOTP) {
@@ -509,7 +519,7 @@ const verifyOTP = asyncHandler(async (req, res) => {
     } else {
       messages = "Verification failed, please check the OTP or resend it.";
       console.log("verification failed");
-      res.render("./user/pages/verifyOTP", { messages, email, user });
+      res.render("./user/pages/verifyOTP", { messages, email, user,user1, user_id});
     }
     
   } catch (error) {
@@ -524,6 +534,7 @@ const verifyOTP = asyncHandler(async (req, res) => {
         req.session.otpUser.otp = { otp: OTP };
         const user = req.session.otpUser;
        const user1=req.session.user_id;
+       const user_id=await User.findById(user1);
 
         const email = req.session.otpUser.email
         const username = req.session.otpUser.username
@@ -539,7 +550,7 @@ const verifyOTP = asyncHandler(async (req, res) => {
             console.error('Error sending OTP:', error);
             return res.status(500).send('Error sending OTP');
         }
-        res.render('./user/pages/reSendOtp', { email ,user});
+        res.render('./user/pages/reSendOtp', { email ,user, user_id, user1});
 
     } catch (error) {
         throw new Error(error)
@@ -615,6 +626,9 @@ const login = async (req, res) => {
     const { email , password  } = req.body;
     // Find the user by username using async/await
     const user = await User.findOne({ email });
+    const user1=req.session.user_id;
+       const user_id=await User.findById(user1);
+
     console.log(user,"user isssssssssssss");
    
     if (!user) {
@@ -623,7 +637,7 @@ const login = async (req, res) => {
     } else {
       if (user.isBLock) {
         const errorMessage = "User is blocked. Please contact support.";
-        return res.render("user/pages/login", { errorMessage,user });
+        return res.render("user/pages/login", { errorMessage,user,user1,user_id });
       }
       if (user && user.isBLock) {
         req.session.user_id=null;
@@ -652,11 +666,12 @@ const login = async (req, res) => {
 const loadproductdetailspage=async(req,res)=>{
   try {
     const productId = req.query.id
+    const user_id=await User.findById(user);
     console.log(productId)
     const user=req.session.user_id;
     const getalldata = await Product.findById(productId)
 
- res.render('./user/pages/productdetails',{getalldata,user})
+ res.render('./user/pages/productdetails',{getalldata,user,user_id})
 
     //  res.render('./user/pages/productdetails')
   } catch (error) {
@@ -680,8 +695,9 @@ const logout = async(req,res)=>{
 const forgetLoad = async (req, res) => {
   try {
     const user=req.session.user_id;
+    const user_id=await User.findById(user);
 
-      res.render('./user/pages/forgetpsw',{user})
+      res.render('./user/pages/forgetpsw',{user,user_id})
   } catch (error) {
       throw new Error(error)
   }
@@ -694,13 +710,15 @@ const forgetpswd = async (req, res) => {
 
       const email = req.body.email
       const user = await User.findOne({ email: email });
+      const user1=req.session.user_id;
+    const user_id=await User.findById(user);
       if (user) {
           const randomString = randomstring.generate();
           const updateData = await User.updateOne({ email: email }, { $set: { token: randomString } })
           sendVerifymail(user.username, user.email, randomString);
           res.render('./user/pages/forgetpsw', {errorMessage : "Please check your mail to reset your password",user})
       } else {
-          res.render('./user/pages/forgetpsw', { errorMessage: "user email is incorrect",user})
+          res.render('./user/pages/forgetpsw', { errorMessage: "user email is incorrect",user,user_id,user1})
       }
 
   } catch (error) {
@@ -711,6 +729,7 @@ const forgetpswd = async (req, res) => {
 //forget pswd page get---
 const forgetPswdload = async(req,res)=>{
   const user=req.session.user_id;
+  const user_id=await User.findById(user);
 
 
   try {
@@ -753,13 +772,14 @@ const resetPswd = async (req, res) => {
   try {
     const newPassword = req.body.password;
     const user = req.session.user_id;
+    const user_id=await User.findById(user);
     
 
     console.log('Entered resetPswd function');
 
     if (!user) {
       console.log('User not found');
-      return res.status(400).render('./user/pages/login', { message: 'User not found' , user});
+      return res.status(400).render('./user/pages/login', { message: 'User not found' , user,user_id});
     }
 
   
@@ -813,8 +833,9 @@ const resetPswd = async (req, res) => {
 const loadResetpage = async (req, res) => {
   try {
     const user=req.session.user_id;
+    const user_id=await User.findById(user);
     console.log(user)
-    res.render("./user/pages/reset", {user} );
+    res.render("./user/pages/reset", {user,user_id} );
   } catch (error) {
     throw new Error(error);
   }
@@ -865,6 +886,7 @@ const UpdatePassword = async (req, res) => {
 const loadwalletpage = async (req, res) => {
   try {
     const userId = req.session.user_id;
+    const user_id=await User.findById(userId);
     const user = await User.findById(userId);
     let wallet = await Wallet.findOne({ user: userId });
 
@@ -872,7 +894,7 @@ const loadwalletpage = async (req, res) => {
       wallet = await Wallet.create({ user: userId, balance: 0 }); // Include user field when creating a new wallet
     }
 
-    res.render('./user/pages/wallet', { user, wallet });
+    res.render('./user/pages/wallet', { user, wallet,user_id });
   } catch (error) {
     throw new Error(error);
   }
@@ -884,13 +906,14 @@ const walletTransactionspage = asyncHandler(async (req, res) => {
       const walletId = req.query.id;
       const walletTransactions = await WalletTransaction.find({ wallet: walletId }).sort({ timestamp: -1 });
       const userId = req.session.user_id;
+      const user_id=await User.findById(userId);
       const user = await User.findById(userId);
      
       // const walletTransactions = await WalletTransaction.find({ wallet: walletId }).sort({ timestamp: -1 });
       res.render("user/pages/walletTransaction", {
           title: "Wallet Transactions",
           page: "Wallet-Transactions",
-          walletTransactions,user
+          walletTransactions,user,user_id
       });
   } catch (error) {
       throw new Error(error);

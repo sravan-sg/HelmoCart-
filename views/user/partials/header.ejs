@@ -8,17 +8,17 @@
           Free shipping for standard order over $100
         </div>
         <div class="right-top-bar flex-w h-full">
-          <% if(!isAuthenticated){ %>
+          <% if(!isAuthenticated){ %>
           <a href="/login" class="flex-c-m trans-04 p-lr-25">
            login
           </a>
           <a href="/registration" class="flex-c-m trans-04 p-lr-25">
           register
           </a>
-          <% } else if(user ){ %>
+          <% } else if(user_id ){ %>
          
           <a href="/userprofile" class="flex-c-m trans-04 p-lr-25">
-          <%= user.username %>
+          <%= user_id.username %>
             
           </a>
           <a href="/logout" class="flex-c-m trans-04 p-lr-25">
@@ -272,4 +272,4 @@
       </div>
     </div>
   </div>
-</div> -->
+</div> -->

@@ -24,7 +24,7 @@ userRoute.use((req, res, next) => {
 });
 console.log(userController,'userCotrollerrrrrrrrrrrs');
 
-userRoute.get('/',userAuth.isLogin,userController.loadlandingpage);
+userRoute.get('/',userController.loadlandingpage);
 userRoute.get('/login',userAuth.isLogout,userController.loadloginpage);
 userRoute.get('/userprofile',userController.loaduserprofile);
 userRoute.post('/userprofile',userController.editProfilePost);
@@ -39,9 +39,6 @@ userRoute.get('/shop',userController.loadshoppage);
 
 userRoute.get('/contact',userController.loadcontactpage);
 userRoute.get('/product',userController.loadproductdetailspage);
-userRoute.get('/login',userAuth.isLogout,userController.loadloginpage);
-userRoute.get('/',userAuth.isLogin,userController.loadlandingpage)
-
 
 userRoute.get('/otp',userController.sendOTPpage);
 userRoute.post('/otp',userController.verifyOTP);
@@ -134,7 +131,8 @@ userRoute.post('/apply-coupon',userAuth.isLogin,orderController.applyCoupon);
 userRoute.get("/coupon/remove", userAuth.isLogin, orderController.removeAppliedCoupon);
 
 
-
+// 404 notfound page--
+userRoute.get('*',(req,res)=>{res.render('./user/pages/404')})
 
 
 

@@ -109,6 +109,7 @@
     var repeatPassword = document.getElementById('form1Example4').value;
     var mobile = document.getElementById('mobile').value;
     var errorMessageElement = document.getElementById('errorMessage');
+    const passwordRegex = /^[A-Z][a-zA-Z]+@*\d$/  ;
 
     // Validate all form elements
     if (username.trim() === "" || email.trim() === "" || password.trim() === "" || repeatPassword.trim() === "" || mobile.trim() === "") {
@@ -156,6 +157,19 @@
       errorMessageElement.style.display = 'block';
       return false;
     }
+
+    if(password.trim().length < 6){
+      errorMessageElement.innerHTML = 'Atleast 8 characters for password';
+      errorMessageElement.style.display  = 'block';
+      setTimeout(() =>hide(errorMessage),3000);
+      return false;
+    }
+
+    if(!passwordRegex.test(password)){
+      errorMessageElement.innerHTML = "Password should contain uppercase, lowercase and digit. eg: Secure@1, Sravan@1 ";
+      errorMessageElement.style.display = 'block';
+      return false;
+    }
 
     return true;
   }

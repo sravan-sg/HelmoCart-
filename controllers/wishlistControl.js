@@ -2,15 +2,10 @@ const Product = require("../models/productModel");
 const User = require("../models/usermodels");
 const wishlist = require("../models/wishlistModel");
 
-
-
-
-
-
-
 const loadwishlistpage = async (req, res) => {
   try {
     const userId = req.session.user_id;
+    const user_id=await User.findById(userId);
     const user = await User.findById(userId);
     const productId = req.body.productId;
     
@@ -19,7 +14,7 @@ const userwishlist= await wishlist.find().populate(
 
     res.render("./user/pages/wishlist", {
       user,
-      userwishlist,productId
+      userwishlist,productId,user_id
      
     });
   } catch (error) {
@@ -85,4 +80,4 @@ const removewishlist =async (req,res)=>{
 
 
 
-module.exports = {loadwishlistpage ,addToWishlist,removewishlist }
+module.exports = {loadwishlistpage ,addToWishlist,removewishlist }

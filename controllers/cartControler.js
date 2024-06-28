@@ -9,6 +9,7 @@ const coupon=require("../models/couponModel")
 const loadshopcartpage = async (req, res) => {
   try {
     const userId = req.session.user_id;
+    const user_id=await User.findById(userId);
     const user = await User.findById(userId);
     const error = req.session.insufficientstock
       ? req.session.insufficientstock
@@ -40,7 +41,7 @@ const loadshopcartpage = async (req, res) => {
       user,
       getCart,
       total,
-      errorMessage: error,
+      errorMessage: error,user_id
     });
   } catch (error) {
     console.log(error.message);
@@ -51,6 +52,7 @@ const loadshopcartpage = async (req, res) => {
 const addToCart = async (req, res) => {
   try {
     const userId = req.session.user_id;
+    
     const productId = req.body.productId;
     const product = await Product.findById(productId);
 
@@ -191,6 +193,7 @@ const updateCart = async (req, res) => {
 const loadcheckoutpage = async (req, res) => {
   try {
     const userId=req.session.user_id;
+    const user_id=await User.findById(userId);
     const user=await User.findById(userId);
     const getCart = await Cart.find({user_id: user}).populate(
       "products.productId",
@@ -216,7 +219,7 @@ const total=getCart.reduce((acc,cart)=>acc+cart.total,0);
    
   res.render("./user/pages/checkout",{
     getCart,
-    user,address,total,Coupon
+    user,address,total,Coupon,user_id
   })
     
   }
