@@ -331,7 +331,7 @@
                 "Order Placed successfully",
                 "success"
               ).then(() => {
-                window.location.href = "/";
+                window.location.href = "/ordersuccess";
               });
             }
             else if (selectedPaymentMethod === "wallet") {
@@ -340,7 +340,7 @@
                 "Order Placed successfully",
                 "success"
               ).then(() => {
-                window.location.href = "/";
+                window.location.href = "/ordersuccess";
               });
             }
             else if (selectedPaymentMethod === "razorpay") {
@@ -442,7 +442,7 @@
 
       console.log("Response status:", response.status);
       if (response.ok) {
-          window.location.href = '/';
+          window.location.href = '/ordersuccess';
       } else {
           const errorData = await response.json();
           await Swal.fire('Error', errorData.error, 'error');

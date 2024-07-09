@@ -24,7 +24,7 @@ const instance = new Razorpay({
 const loadorderDetailing = async (req, res) => {
   try {
     const userId = req.session.user_id;
-    const user = await User.findById(userId);
+    const user_id = await User.findById(userId);
     const orderId = req.query.id;
    
     
@@ -43,7 +43,7 @@ const loadorderDetailing = async (req, res) => {
       return res.status(404).send("Order details not found");
     }
 
-    res.render("./user/pages/orderDetails", { orderDetails, user,orderDetails });
+    res.render("./user/pages/orderDetails", { orderDetails, user_id,orderDetails });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal Server Error");
@@ -52,13 +52,13 @@ const loadorderDetailing = async (req, res) => {
 
 const loadorderspage = asyncHandler(async (req, res) => {
   const userId = req.session.user_id;
-    const user = await User.findById(userId)
+    const user_id = await User.findById(userId)
     
    
   try {
     const orderdetails = await Order.find({ user: userId });
 
-    res.render("user/pages/orders", { user, orderdetails});
+    res.render("user/pages/orders", { user_id, orderdetails});
     console.log(orderdetails,'order detaaailssssss');
   } catch (error) {
     console.log(error);

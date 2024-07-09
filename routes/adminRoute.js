@@ -5,7 +5,7 @@ const categoryController = require('../controllers/categorycontrol')
 const adminAuth=require('../middleware/adminAuth')
 const productController = require('../controllers/productControl')
 
-const { isLogin } = require('../middleware/userAuth');
+
 const { upload } = require('../config/upload')
 require('dotenv').config()
 
@@ -17,8 +17,8 @@ adminRoute.use((req, res, next) => {
 })
 
 
-adminRoute.get('/',adminAuth.isLogout,admincontroller.loadLogin);
-adminRoute.post('/',admincontroller.login);
+adminRoute.get('/',admincontroller.loadLogin);
+adminRoute.post('/',adminAuth.isLogin,admincontroller.login);
 adminRoute.get('/dashboard',admincontroller.loadDashboard);
 
 adminRoute.get('/logout', admincontroller.logout);
@@ -83,16 +83,6 @@ adminRoute.get("/salesreport", admincontroller.salesReportpage);
 adminRoute.get("/sales-data/weekly", admincontroller.getSalesDataWeekly);
 adminRoute.get("/sales-data/yearly", admincontroller.getSalesDataYearly);
 adminRoute.get("/sales-data", admincontroller.getSalesData);
-
-
-
-
-
-
-
-
-
-
 
 
 module.exports=adminRoute;

@@ -131,8 +131,6 @@ userRoute.post('/apply-coupon',userAuth.isLogin,orderController.applyCoupon);
 userRoute.get("/coupon/remove", userAuth.isLogin, orderController.removeAppliedCoupon);
 
 
-// 404 notfound page--
-userRoute.get('*',(req,res)=>{res.render('./user/pages/404')})
 
 
 

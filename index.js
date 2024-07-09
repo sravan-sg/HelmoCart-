@@ -67,6 +67,18 @@ app.use(
 app.use("/", userRoute);
 app.use("/admin", adminRoute);
 
+// 404 route for user side
+app.use("/", (req, res) => {
+  res.status(404).render('./user/pages/404');
+});
+
+// 404 route for admin side
+app.use("/admin", (req, res) => {
+  res.status(404).render('./admin/pages/page404', { title: 'Error'});
+});
+
+
+
 app.listen(PORT, () => {
   console.log(`server is running succesfully on ${PORT}`);
 });

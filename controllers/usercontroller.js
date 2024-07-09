@@ -545,12 +545,12 @@ const verifyOTP = asyncHandler(async (req, res) => {
             sendOtp(email, OTP, username);
             console.log('otp is sent');
             console.log(OTP)
-            return res.render('./user/pages/reSendOtp', { email ,user});
+            return res.render('./user/pages/resendOtp', { email ,user});
         } catch (error) {
             console.error('Error sending OTP:', error);
             return res.status(500).send('Error sending OTP');
         }
-        res.render('./user/pages/reSendOtp', { email ,user, user_id, user1});
+        res.render('./user/pages/resendOtp', { email ,user, user_id, user1});
 
     } catch (error) {
         throw new Error(error)
@@ -666,9 +666,10 @@ const login = async (req, res) => {
 const loadproductdetailspage=async(req,res)=>{
   try {
     const productId = req.query.id
+    const user=req.session.user_id;
     const user_id=await User.findById(user);
     console.log(productId)
-    const user=req.session.user_id;
+    
     const getalldata = await Product.findById(productId)
 
  res.render('./user/pages/productdetails',{getalldata,user,user_id})
