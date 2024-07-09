@@ -74,7 +74,7 @@ app.use("/", (req, res) => {
 
 // 404 route for admin side
 app.use("/admin", (req, res) => {
-  res.status(404).render('./admin/pages/page404', { title: 'Error'});
+  res.status(404).render('./admin/page404', { title: 'Error' });
 });
 
 
